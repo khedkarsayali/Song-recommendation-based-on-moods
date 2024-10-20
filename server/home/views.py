@@ -1,11 +1,10 @@
-import os
-import cv2
+from django.contrib.auth.hashers import check_password
 import logging
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from deepface import DeepFace
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
@@ -53,14 +52,20 @@ def signup(request):
 
     return render(request, 'signup.html')
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import login as auth_login
+from django.contrib import messages
+from home.models import User  # Make sure this points to your user model
+
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
+
+        user = User.objects.filter(username=username).first()
+
+        if user and check_password(password, user.password):  # Verify hashed password
             auth_login(request, user)
             return redirect('menu')
         else:
@@ -94,3 +99,26 @@ def detect_emotion(request):
             return JsonResponse({"error": str(e)})
 
     return JsonResponse({"error": "Invalid request"})
+
+def admin(request):
+    users = User.objects.all()  # Fetch all users from the database
+    return render(request, 'admin.html', {'users': users})
+
+def delete_user(request, user_id):
+    if request.method == "POST":
+        user = get_object_or_404(User, id=user_id)  # Get the user by ID
+        user.delete()  # Delete the user
+        return redirect('admin')
+    
+ADMIN_PASSWORD = 'abcd1234'
+
+def admin_login(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        if password == ADMIN_PASSWORD:
+            # Password is correct, redirect to admin dashboard
+            return redirect('admin')
+        else:
+            # Password is incorrect, return error message
+            return render(request, 'admin_login.html', {'error': 'Incorrect password. Please try again.'})
+    return render(request, 'admin_login.html')

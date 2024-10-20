@@ -5,83 +5,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% comment %} <link rel="stylesheet" href="{% static 'expressbeats/css/home.css' %}"> {% endcomment %}
-    <title>Signup</title>
+    <title>ExpressBeats - Signup</title>
     <style>
         /* General Styles */
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            color: white;
-            background-color: #282c34; /* Optional: Dark background */
-            height: 100vh; /* Full viewport height */
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            background-color: #9A616D; /* Background color as per previous design */
+            height: 100vh;
             display: flex;
-            justify-content: flex-end; /* Align content to the right */
-            align-items: center; /* Center content vertically */
+            justify-content: center;
+            align-items: center;
         }
-    
-        /* Signup Container Styles */
-        .signup-container {
-            width: 400px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
+
+        /* Signup Container */
+        .card {
+            display: flex;
+            width: 70%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Left Image Section */
+        .card img {
+            width: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Right Form Section */
+        .form-container {
+            padding: 50px;
+            width: 50%;
+        }
+
+        .form-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #e74c3c;
             text-align: center;
         }
-    
+
+        /* Form Styles */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-    
+
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
         .form-group input {
             width: 100%;
             padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            border: none;
+            font-size: 1em;
+            color: #333;
         }
-    
+
+        /* Submit Button */
         .form-group button {
-            padding: 10px;
-            background-color: #4CAF50; /* Green */
+            width: 106.5%;
+            padding: 15px;
+            background-color: #333;
             color: white;
             border: none;
             border-radius: 5px;
+            font-size: 1.1em;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-    
+
         .form-group button:hover {
-            background-color: #45a049;
+            background-color: #555;
+        }
+
+        /* Bottom Links */
+        .bottom-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .bottom-links a {
+            color: #9A616D;
+            text-decoration: none;
+        }
+
+        .bottom-links a:hover {
+            text-decoration: underline;
         }
     </style>
-    
 </head>
 <body>
-    <div class="signup-container">
-        <h1>Signup</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <div>{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="username" placeholder="Username" required>
+    <div class="card">
+        <!-- Left Section with Image -->
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="Signup Image">
+
+        <!-- Right Section with Form -->
+        <div class="form-container">
+            <h2>ExpressBeats Signup</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" name="password1" id="password1" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Create Account</button>
+                </div>
+            </form>
+            <div class="bottom-links">
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
             </div>
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input type="password" name="password1" placeholder="Password" required>
-            </div>
-            <div class="form-group">
-                <input type="password" name="password2" placeholder="Confirm Password" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Sign Up</button>
-            </div>
-        </form>
+        </div>
     </div>
 </body>
 </html>

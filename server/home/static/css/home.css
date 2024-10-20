@@ -1,42 +1,87 @@
+/* General Styles */
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    color: white;
+    font-family: 'Roboto', sans-serif;
+    color: #f5f5f5;
+    text-align: center;
+    background-color: #9A616D;
 }
 
+/* Background Styles */
 .background {
     background-image: url('{% static "images/home_bg.png" %}');
     background-size: cover;
     background-position: center;
     height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    flex-direction: column;
+    backdrop-filter: blur(8px);
 }
 
+/* Title Styles */
+.title {
+    font-size: 3em;
+    font-weight: 600;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+}
+
+/* Container Styles */
 .container {
-    width: 300px;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
+    width: 350px;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
 }
 
+/* User Types Styles */
 .user-types {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    margin-top: 20px;
 }
 
+/* Individual User Type Styles */
 .user-type {
-    width: 120px;
     text-align: center;
-    margin: 10px;
-    cursor: pointer; /* Pointer cursor for interactive elements */
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
+/* Hover effect: scale and add border to the user type */
+.user-type:hover {
+    transform: scale(1.05); /* Slight zoom-in on hover */
+}
+
+.user-type:hover .user-image {
+    border-color: #000; /* Changes the border color on hover */
+    border-width: 4px; /* Increases the border width */
+}
+
+/* User Image Styles */
 .user-image {
-    width: 100px; /* Adjust the size as needed */
-    height: 100px; /* Adjust the size as needed */
-    border-radius: 50%; /* Circle image */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    transition: border 0.3s ease; /* Smooth transition for the border */
+}
+
+/* User Type Text */
+.user-type p {
+    font-size: 1.2em;
+    margin-top: 10px;
+    color: #f5f5f5;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease; /* Smooth transition for text color */
+}
+
+.user-type:hover p {
+    color: #000; /* Change text color on hover */
 }

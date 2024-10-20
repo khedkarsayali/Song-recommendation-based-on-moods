@@ -1,93 +1,191 @@
-
 <!DOCTYPE html>
-{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for Icons -->
     <style>
-        /* General Styles */
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            color: white;
-            background-color: #282c34; /* Dark background */
         }
 
-        /* Login Container Styles */
-        .login-container {
-            width: 400px;
-            background-color: rgba(0, 0, 0, 0.7);
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #9A616D;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             padding: 20px;
-            border-radius: 10px;
-            margin: 100px auto; /* Centering the container */
-            text-align: center;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        /* Card */
+        .card {
+            display: flex;
+            width: 900px;
+            height: 500px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background-color: white;
         }
 
-        .form-group input {
+        /* Left Image Section */
+        .card .img-container {
+            flex: 1;
+        }
+
+        .card .img-container img {
             width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .form-group button {
-            padding: 10px;
-            background-color: #4CAF50; /* Green */
+        /* Right Form Section */
+        .card .form-container {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Logo */
+        .form-container .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        /* Heading */
+        .form-container h5 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Error Message */
+        .form-container .error-message {
+            color: red;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Form Group */
+        .form-container .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* Button */
+        .form-container .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
             color: white;
-            border: none;
-            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            width: 100%; /* Make the button full-width */
+            transition: background-color 0.3s ease;
         }
 
-        .form-group button:hover {
-            background-color: #45a049;
+        .form-container .btn:hover {
+            background-color: #555;
         }
 
-        /* Message Styles */
-        .message {
-            margin: 10px 0;
-            color: red; /* For error messages */
+        /* Links */
+        .form-container a {
+            color: #393f81;
+            font-size: 0.9em;
+            text-decoration: none;
         }
 
-        a {
-            color: #4CAF50; /* Link color */
-            text-decoration: none; /* Remove underline */
+        .form-container a:hover {
+            text-decoration: underline;
         }
 
-        a:hover {
-            text-decoration: underline; /* Underline on hover */
+        .form-container .forgot-password {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Footer Links */
+        .form-container .footer-links {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 30px;
+        }
+
+        .form-container .footer-links a {
+            color: #999;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="username" placeholder="Username" required>
+
+    <div class="container">
+        <div class="card">
+            <!-- Left Image Section -->
+            <div class="img-container">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="Login Image">
             </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password" required>
+            
+            <!-- Right Form Section -->
+            <div class="form-container">
+                <div class="logo">
+                    <i class="fas fa-music"></i> ExpressBeats
+                </div>
+                <h5>Sign into your account</h5>
+                
+                <!-- Show error message if it exists -->
+                {% if error_message %}
+                    <div class="error-message">{{ error_message }}</div>
+                {% endif %}
+                
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <!-- Username Input -->
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Email address" required>
+                    </div>
+                    
+                    <!-- Password Input -->
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    
+                    <!-- Login Button -->
+                    <button type="submit" class="btn">LOGIN</button>
+                    
+                </form>
+                
+                <!-- Footer Links -->
+                <p class="footer-links">
+                    Don't have an account? <a href="{% url 'signup' %}">Register here</a><br>
+                </p>
             </div>
-            <div class="form-group">
-                <button type="submit">Login</button>
-            </div>
-        </form>
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+        </div>
     </div>
+
 </body>
 </html>

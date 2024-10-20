@@ -5,17 +5,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExpressBeats Menu</title>
-    <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif; /* Consistent font */
+            background-color: #9A616D; /* Background color as per signup page */
+            color: #333; /* Text color */
+        }
+
+        /* Menu Styles */
+        .menu {
+            display: flex;
+            justify-content: center; /* Center the menu horizontally */
+            align-items: center; /* Center the menu vertically */
+            height: 100vh; /* Full viewport height */
+            flex-direction: column; /* Stack menu items vertically */
+        }
+
+        /* Logo Styles */
+        .logo {
+            font-size: 2em; /* Size of the logo text */
+            font-weight: bold; /* Bold font weight for the logo */
+            color: black; /* Logo color */
+            margin-bottom: 30px; /* Spacing below the logo */
+        }
+
+        /* Individual Menu Item Styles */
+        .menu-item {
+            background-color: white; /* White background for menu items */
+            width: 250px; /* Width of menu items */
+            padding: 20px; /* Padding for menu items */
+            margin: 10px; /* Space between menu items */
+            border-radius: 12px; /* Rounded corners */
+            text-align: center; /* Center text in menu items */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Transition effects */
+        }
+
+        /* Hover Effects */
+        .menu-item:hover {
+            background-color: black; /* Highlight color on hover */
+            transform: scale(1.05); /* Slight zoom effect on hover */
+        }
+
+        /* Link Styles */
+        .menu-item a {
+            text-decoration: none; /* Remove underline from links */
+            color: #333; /* Text color for links */
+            font-size: 1.5em; /* Font size for links */
+            font-weight: bold; /* Bold font weight */
+            text-transform: uppercase; /* Uppercase text */
+        }
+
+        .menu-item a:hover {
+            color: #fff; /* Change text color on link hover */
+        }
+    </style>
 </head>
 <body>
     <div class="menu">
-        <div class="menu-item">
-            <!-- Change the URL to point to the emotion detection view -->
-            <a href="{% url 'live_emotion_detection' %}">ExpressBeats</a>
+        <div class="logo">
+            <i class="fas fa-music"></i> ExpressBeats <!-- Added icon placeholder -->
         </div>
         <div class="menu-item">
-            <a href="{% url 'login' %}">MusicBot</a>
+            <a href="{% url 'live_emotion_detection' %}">MoodyTunes</a> <!-- Link to the emotion detection view -->
+        </div>
+        <div class="menu-item">
+            <a href="{% url 'login' %}">MusicBot</a> <!-- Link to the login page -->
         </div>
     </div>
+
+    <!-- Font Awesome CDN for the music icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

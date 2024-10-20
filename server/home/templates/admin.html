@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Administration</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif; /* Consistent font */
+            background-color: #9A616D; /* Background color as per the theme */
+            color: #333; /* Text color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px; /* Increased padding */
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding in height calculations */
+        }
+
+        h1 {
+            color: #fff; /* Heading color */
+            margin-bottom: 30px; /* Space below heading */
+            font-size: 2.5em; /* Increased font size */
+            text-align: center; /* Center the heading */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+        }
+
+        table {
+            width: 100%;
+            max-width: 900px; /* Max width for the table */
+            border-collapse: collapse;
+            border-radius: 12px; /* Rounded corners for the table */
+            overflow: hidden; /* Prevent overflow */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            background-color: #fff; /* White background for the table */
+        }
+
+        table, th, td {
+            border: 1px solid #ddd; /* Light border for table */
+        }
+
+        th, td {
+            padding: 15px; /* Increased padding */
+            text-align: left;
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+
+        /* Header row styles */
+        th {
+            background-color: #000; /* Black background for header cells */
+            color: white; /* White text color for header cells */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Zebra striping for table rows */
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; /* Highlight row on hover */
+        }
+
+        .delete-btn {
+            background-color: transparent; /* Transparent background */
+            border: none; /* No border */
+            cursor: pointer; /* Pointer cursor on hover */
+            font-size: 16px; /* Font size for delete button */
+            transition: transform 0.3s; /* Transition for scale effect */
+        }
+
+        .delete-btn i {
+            color: red; /* Red color for delete icon */
+            transition: transform 0.3s; /* Transition for hover effect */
+        }
+
+        .delete-btn:hover i {
+            transform: scale(1.2); /* Slightly enlarge icon on hover */
+        }
+
+        /* No users found message style */
+        .no-users {
+            text-align: center;
+            color: #555; /* Gray color for empty state */
+            font-style: italic; /* Italic style for emphasis */
+            padding: 20px; /* Space around message */
+            font-size: 1.2em; /* Slightly larger font */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em; /* Smaller font size on small screens */
+            }
+            table {
+                width: 100%; /* Full width on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>User Administration</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <form method="POST" action="{% url 'delete_user' user.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" title="Delete User">
+                            <i class="fas fa-trash-alt"></i> <!-- Font Awesome Trash Icon -->
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="no-users">No users found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
