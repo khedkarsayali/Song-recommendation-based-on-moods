@@ -1,0 +1,87 @@
+<!-- expressbeats/templates/expressbeats/signup.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <link rel="stylesheet" href="{% static 'expressbeats/css/home.css' %}"> {% endcomment %}
+    <title>Signup</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            background-color: #282c34; /* Optional: Dark background */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: flex-end; /* Align content to the right */
+            align-items: center; /* Center content vertically */
+        }
+    
+        /* Signup Container Styles */
+        .signup-container {
+            width: 400px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    
+        .form-group {
+            margin-bottom: 15px;
+        }
+    
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+    
+        .form-group button {
+            padding: 10px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Signup</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password1" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password2" placeholder="Confirm Password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

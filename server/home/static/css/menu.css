@@ -1,0 +1,45 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #282c34;
+    color: white;
+}
+
+/* Menu Styles */
+.menu {
+    display: flex;
+    justify-content: center; /* Center the menu horizontally */
+    align-items: center; /* Center the menu vertically */
+    height: 100vh;
+    flex-direction: column; /* Stack menu items vertically */
+}
+
+/* Individual Menu Item Styles */
+.menu-item {
+    background-color: #333;
+    width: 200px;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: #4CAF50; /* Highlight color on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.menu-item a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.menu-item a:hover {
+    color: #fff;
+}

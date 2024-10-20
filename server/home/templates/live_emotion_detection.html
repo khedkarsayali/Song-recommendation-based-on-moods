@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Emotion Detection</title>
+    <style>
+        #video {
+            width: 100%;
+            max-width: 600px;
+        }
+        #emotion-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Emotion Detection</h1>
+    <video id="video" autoplay></video>
+    <button id="capture">Capture Emotion</button>
+    <h2 id="emotion-result"></h2>
+
+    <script>
+        const video = document.getElementById('video');
+        const emotionResult = document.getElementById('emotion-result');
+
+        // Access the webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing webcam: ", err);
+                emotionResult.textContent = "Error accessing webcam: " + err.message;
+            });
+
+        document.getElementById('capture').onclick = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
+
+                // Send the image to the Django server for emotion detection
+                fetch('/detect-emotion/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'  // CSRF token for security
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        emotionResult.textContent = `Error: ${data.error}`;
+                    } else {
+                        emotionResult.textContent = `Detected Emotion: ${data.emotion}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    emotionResult.textContent = 'Error detecting emotion: ' + error.message;
+                });
+            }, 'image/jpeg'); // Ensure the blob is of type image/jpeg
+        };
+    </script>
+</body>
+</html>
