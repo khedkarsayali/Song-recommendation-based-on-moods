@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'AIP',
         'CLIENT' : {
-            'host' : 'mongodb+srv://Project:Project@project.wnvqp.mongodb.net/?retryWrites=true&w=majority&appName=Project'
+            'host' : 'mongodb+srv://AIProject:AIProject@project.jwdqt.mongodb.net/'
         }
     }
 }
