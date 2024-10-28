@@ -54,6 +54,12 @@
             color: #fff; /* Text color for the result */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for better readability */
         }
+
+        #recommended-songs {
+            margin-top: 20px; /* Space above the recommended songs */
+            color: #fff; /* Text color for recommended songs */
+            font-size: 1.2em; /* Font size for recommended songs */
+        }
     </style>
 </head>
 <body>
@@ -61,6 +67,7 @@
     <video id="video" autoplay></video>
     <button id="capture">Capture Emotion</button>
     <h2 id="emotion-result"></h2>
+    <div id="recommended-songs"></div>
 
     <script>
         const video = document.getElementById('video');
@@ -105,6 +112,8 @@
                         emotionResult.textContent = `Error: ${data.error}`;
                     } else {
                         emotionResult.textContent = `Detected Emotion: ${data.emotion}`;
+                        // Fetch recommended songs based on the detected emotion
+                        fetchRecommendedSongs(data.emotion);
                     }
                 })
                 .catch(error => {
@@ -113,6 +122,47 @@
                 });
             }, 'image/jpeg'); // Ensure the blob is of type image/jpeg
         };
+
+        // Function to fetch recommended songs
+        // Function to fetch recommended songs
+function fetchRecommendedSongs(emotion) {
+    fetch(`/get-songs/${emotion}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check if data contains top_songs and pass it to displayRecommendedSongs
+            if (data.top_songs) {
+                displayRecommendedSongs(data.top_songs);
+            } else {
+                document.getElementById('recommended-songs').innerHTML = 'No songs found for this emotion.';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching songs:', error);
+            document.getElementById('recommended-songs').innerHTML = 'Error fetching songs.';
+        });
+}
+
+// Function to display recommended songs
+function displayRecommendedSongs(songs) {
+    const recommendedSongsDiv = document.getElementById('recommended-songs');
+    recommendedSongsDiv.innerHTML = ''; // Clear previous results
+
+    // Check if songs is an array and has elements
+    if (!Array.isArray(songs) || songs.length === 0) {
+        recommendedSongsDiv.innerHTML = 'No songs found for this emotion.';
+        return;
+    }
+
+    // Map over the songs and format them as required
+    const songList = songs.map(song => `<p>Song Name: ${song.song_name}, URI: ${song.uri}</p>`).join('');
+    recommendedSongsDiv.innerHTML = `<h3>Recommended Songs:</h3>${songList}`;
+}
+
     </script>
 </body>
 </html>
