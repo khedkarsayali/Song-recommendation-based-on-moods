@@ -1,0 +1,5 @@
+djongo
+opencv
+tensorflow
+pytz
+dnspython
