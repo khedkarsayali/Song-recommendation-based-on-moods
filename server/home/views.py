@@ -86,61 +86,82 @@ from django.core.files.storage import FileSystemStorage
 from deepface import DeepFace
 from django.views.decorators.csrf import csrf_exempt
 import logging
-SPOTIFY_DATASET_PATH = r'C:\Users\Admin\Documents\College\Sem 5\AI prj\3D-Structures-Generation-from-2D\server\genres_v2.csv'
+SPOTIFY_DATASET_PATH = r'./server/home/spotify_data/dataset.csv'
+
+import pandas as pd
+from django.http import JsonResponse
 
 try:
+    # Load the dataset
     spotify_data = pd.read_csv(SPOTIFY_DATASET_PATH)
     print(spotify_data.head())
 except Exception as e:
     print(f"An error occurred: {e}")
 
-# Example mapping of emotions to genres; you can modify this as needed
-emotion_to_genre = {
-    'happy': 'pop',
-    'sad': 'dark trap',  # assuming "Dark Trap" corresponds to sad
-    'angry': 'rock',
-    'surprise': 'electronic',
-    'disgust': 'classical',
-    'fear': 'ambient'
-}
-from django.http import JsonResponse
-import pandas as pd
+# Define mood filters dynamically
+def get_mood_filters(data):
+    return {
+        "happy": (spotify_data['valence'] > 0.6) & (spotify_data['energy'] > 0.6),
+        "sad": (spotify_data['valence'] < 0.4) & (spotify_data['energy'] < 0.5),
+        "angry": (spotify_data['energy'] > 0.7) & (spotify_data['danceability'] > 0.6),
+        "neutral": (spotify_data['valence'] >= 0.4) & (spotify_data['valence'] <= 0.6),
+        "surprise": (spotify_data['liveness'] > 0.3) & (spotify_data['energy'] > 0.5),
+        "fear": (spotify_data['acousticness'] > 0.5) & (spotify_data['loudness'] < -5),
+        "disgust": (spotify_data['speechiness'] > 0.3) & (spotify_data['valence'] < 0.3),
+    }
 
-# Assuming you have loaded the Spotify dataset as `spotify_data` and defined `emotion_to_genre` as shown before
-
+# Function to fetch top songs by emotion
 def fetch_top_songs_by_emotion(emotion):
-    # Get the genre based on the detected emotion
-    genre = emotion_to_genre.get(emotion.lower(), None)
-    
-    if genre:
-        # Filter songs based on the genre
-        filtered_songs = spotify_data[spotify_data['genre'].str.contains(genre, case=False, na=False)]
-        
-        # Get top 10 songs based on a specific criteria (e.g., energy)
-        top_songs = filtered_songs.nlargest(10, 'energy')  # Assuming 'energy' as a sorting criteria
+    """
+    Filters songs by mood-specific conditions and returns up to 10 random songs.
+    """
+    mood_filters = get_mood_filters(spotify_data)
 
-        # Convert to a list of dictionaries with only 'song_name' and 'uri'
-        top_songs_list = top_songs[['song_name', 'uri']].to_dict(orient='records')
+    if emotion.lower() in mood_filters:
+        # Apply the filter for the given emotion
+        filtered_songs = spotify_data[mood_filters[emotion.lower()]]
 
-        # Print songs to the terminal for testing
-        print("Top Songs for Emotion '{}':".format(emotion))
+        if filtered_songs.empty:
+            return []
+
+        # Remove rows with missing song names
+        filtered_songs = filtered_songs.dropna(subset=['song_name'])
+
+        # If still empty, return no songs
+        if filtered_songs.empty:
+            return []
+
+       
+        # Randomly select up to 10 songs
+        random_songs = filtered_songs.sample(n=min(len(filtered_songs), 10))
+        selected_columns = ['id', 'uri', 'song_name', 'track_href', 'analysis_url']
+
+        # Convert the results to a list of dictionaries
+        top_songs_list = random_songs[selected_columns].to_dict(orient='records')
+
+        # Display the selected information
+        print(f"Top Songs for Emotion '{emotion}':")
         for song in top_songs_list:
-            print("Song Name: {}, URI: {}".format(song['song_name'], song['uri']))
+            print(f"ID: {song['id']}, URI: {song['uri']}, Song Name: {song['song_name']}, Track Href: {song['track_href']}, Analysis URL: {song['analysis_url']}")
 
+        # Return the list
         return top_songs_list
     else:
-        return []  # Return an empty list if no genre matches
+        return []  # Return an empty list if the emotion is not in the filters
 
-
-
+# Django view to fetch top songs
 def get_top_songs_by_emotion_view(request, emotion):
-    # Call your existing logic to get top songs by emotion
-    top_songs = fetch_top_songs_by_emotion(emotion)  # Call the renamed function
-    
+    """
+    Django view to fetch top songs by emotion.
+    """
+    # Fetch top songs
+    top_songs = fetch_top_songs_by_emotion(emotion)
+
     if top_songs:
         return JsonResponse({'top_songs': top_songs})
     else:
         return JsonResponse({'error': 'No songs found for this emotion.'}, status=404)
+
 
 @csrf_exempt  # Use with caution; ensure appropriate security measures
 def detect_emotion(request):
