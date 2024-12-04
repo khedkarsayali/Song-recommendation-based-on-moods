@@ -86,7 +86,7 @@ from django.core.files.storage import FileSystemStorage
 from deepface import DeepFace
 from django.views.decorators.csrf import csrf_exempt
 import logging
-SPOTIFY_DATASET_PATH = r'./server/home/spotify_data/dataset.csv'
+SPOTIFY_DATASET_PATH = r'C:\Users\Dell\Desktop\Moodify\server\home\spotify_data\data.csv'
 
 import pandas as pd
 from django.http import JsonResponse
@@ -98,8 +98,7 @@ try:
 except Exception as e:
     print(f"An error occurred: {e}")
 
-# Define mood filters dynamically
-def get_mood_filters(data):
+def get_mood_filters(spotify_data):
     return {
         "happy": (spotify_data['valence'] > 0.6) & (spotify_data['energy'] > 0.6),
         "sad": (spotify_data['valence'] < 0.4) & (spotify_data['energy'] < 0.5),
@@ -109,8 +108,6 @@ def get_mood_filters(data):
         "fear": (spotify_data['acousticness'] > 0.5) & (spotify_data['loudness'] < -5),
         "disgust": (spotify_data['speechiness'] > 0.3) & (spotify_data['valence'] < 0.3),
     }
-
-# Function to fetch top songs by emotion
 def fetch_top_songs_by_emotion(emotion):
     """
     Filters songs by mood-specific conditions and returns up to 10 random songs.
@@ -131,10 +128,11 @@ def fetch_top_songs_by_emotion(emotion):
         if filtered_songs.empty:
             return []
 
-       
         # Randomly select up to 10 songs
         random_songs = filtered_songs.sample(n=min(len(filtered_songs), 10))
-        selected_columns = ['id', 'uri', 'song_name', 'track_href', 'analysis_url']
+        
+        # Select the relevant columns to return
+        selected_columns = ['song_name', 'track_spotify_id', 'spotify_track_link', 'thumbnail_link', 'artist_name', 'artist_id']
 
         # Convert the results to a list of dictionaries
         top_songs_list = random_songs[selected_columns].to_dict(orient='records')
@@ -142,12 +140,12 @@ def fetch_top_songs_by_emotion(emotion):
         # Display the selected information
         print(f"Top Songs for Emotion '{emotion}':")
         for song in top_songs_list:
-            print(f"ID: {song['id']}, URI: {song['uri']}, Song Name: {song['song_name']}, Track Href: {song['track_href']}, Analysis URL: {song['analysis_url']}")
+            print(f"Song Name: {song['song_name']}, Track ID: {song['track_spotify_id']}, Track Link: {song['spotify_track_link']}, Artist: {song['artist_name']}, Artist Link: {song['artist_id']}, Thumbnail: {song['thumbnail_link']}")
 
-        # Return the list
+        # Return the list of top songs
         return top_songs_list
     else:
-        return []  # Return an empty list if the emotion is not in the filters
+        return [] 
 
 # Django view to fetch top songs
 def get_top_songs_by_emotion_view(request, emotion):
@@ -163,25 +161,46 @@ def get_top_songs_by_emotion_view(request, emotion):
         return JsonResponse({'error': 'No songs found for this emotion.'}, status=404)
 
 
-@csrf_exempt  # Use with caution; ensure appropriate security measures
+import os
+import time
+import threading
+from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from deepface import DeepFace
+from django.conf import settings
+
+EMOTION_FOLDER = os.path.join(settings.MEDIA_ROOT, 'emotion_recognition')
+
+os.makedirs(EMOTION_FOLDER, exist_ok=True)
+
+def delete_file_after_one_hour(file_path):
+    time.sleep(600)  # Wait for one hour
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"Deleted: {file_path}")
+
+@csrf_exempt
 def detect_emotion(request):
     if request.method == 'POST' and request.FILES.get('image'):
         uploaded_file = request.FILES['image']
-        fs = FileSystemStorage()
+        
+        # Save the file to the designated folder
+        fs = FileSystemStorage(location=EMOTION_FOLDER)
         filename = fs.save(uploaded_file.name, uploaded_file)
-        file_path = fs.url(filename)  # This gives you a URL, not a local path
-
-        # Use the local path for DeepFace analysis
-        local_path = fs.path(filename)  # This gets the local file path
+        file_path = os.path.join(EMOTION_FOLDER, filename)
 
         try:
-            # Perform emotion analysis on the uploaded image
-            result = DeepFace.analyze(local_path, actions=['emotion'], enforce_detection=False)
+            # Perform emotion analysis on the saved image
+            result = DeepFace.analyze(file_path, actions=['emotion'], enforce_detection=False)
             emotion = result[0]['dominant_emotion']
+            
+            # Schedule file deletion after one hour using threading
+            threading.Thread(target=delete_file_after_one_hour, args=(file_path,)).start()
+
             return JsonResponse({'emotion': emotion})
         except Exception as e:
             return JsonResponse({"error": str(e)})
-
     return JsonResponse({"error": "Invalid request"})
 
 def admin(request):
