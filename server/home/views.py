@@ -86,7 +86,7 @@ from django.core.files.storage import FileSystemStorage
 from deepface import DeepFace
 from django.views.decorators.csrf import csrf_exempt
 import logging
-SPOTIFY_DATASET_PATH = r'./server/home/spotify_data/dataset.csv'
+SPOTIFY_DATASET_PATH = r'C:\Users\Admin\Documents\College\Sem 5\AI prj\3D-Structures-Generation-from-2D\server\home\spotify_data\data.csv'
 
 import pandas as pd
 from django.http import JsonResponse
@@ -98,8 +98,7 @@ try:
 except Exception as e:
     print(f"An error occurred: {e}")
 
-# Define mood filters dynamically
-def get_mood_filters(data):
+def get_mood_filters(spotify_data):
     return {
         "happy": (spotify_data['valence'] > 0.6) & (spotify_data['energy'] > 0.6),
         "sad": (spotify_data['valence'] < 0.4) & (spotify_data['energy'] < 0.5),
@@ -131,10 +130,11 @@ def fetch_top_songs_by_emotion(emotion):
         if filtered_songs.empty:
             return []
 
-       
         # Randomly select up to 10 songs
         random_songs = filtered_songs.sample(n=min(len(filtered_songs), 10))
-        selected_columns = ['id', 'uri', 'song_name', 'track_href', 'analysis_url']
+        
+        # Select the relevant columns to return
+        selected_columns = ['song_name', 'track_spotify_id', 'spotify_track_link', 'thumbnail_link', 'artist_name', 'artist_id']
 
         # Convert the results to a list of dictionaries
         top_songs_list = random_songs[selected_columns].to_dict(orient='records')
@@ -142,12 +142,12 @@ def fetch_top_songs_by_emotion(emotion):
         # Display the selected information
         print(f"Top Songs for Emotion '{emotion}':")
         for song in top_songs_list:
-            print(f"ID: {song['id']}, URI: {song['uri']}, Song Name: {song['song_name']}, Track Href: {song['track_href']}, Analysis URL: {song['analysis_url']}")
+            print(f"Song Name: {song['song_name']}, Track ID: {song['track_spotify_id']}, Track Link: {song['spotify_track_link']}, Artist: {song['artist_name']}, Artist Link: {song['artist_id']}, Thumbnail: {song['thumbnail_link']}")
 
-        # Return the list
+        # Return the list of top songs
         return top_songs_list
     else:
-        return []  # Return an empty list if the emotion is not in the filters
+        return [] 
 
 # Django view to fetch top songs
 def get_top_songs_by_emotion_view(request, emotion):

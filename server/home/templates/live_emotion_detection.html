@@ -167,12 +167,14 @@ function displayRecommendedSongs(songs) {
     const songList = songs.map(song => `
     <p>
         <strong>Song Name:</strong> ${song.song_name}<br>
-        <strong>ID:</strong> ${song.id}<br>
-        <strong>URI:</strong> ${song.uri}<br>
-        <strong>Track Href:</strong> <a href="${song.track_href}" target="_blank">${song.track_href}</a><br>
-        <strong>Analysis URL:</strong> <a href="${song.analysis_url}" target="_blank">${song.analysis_url}</a>
+        <strong>Track ID:</strong> ${song.track_spotify_id}<br>
+        <strong>Track URI:</strong> ${song.spotify_track_link}<br>
+        <strong>Artist:</strong> ${song.artist_name}<br>
+        <strong>Artist ID:</strong> ${song.artist_id}<br>
+        <strong>Thumbnail:</strong> <img src="${song.thumbnail_link}" alt="Thumbnail" /><br>
+        <strong>Track Link:</strong> <a href="${song.spotify_track_link}" target="_blank">${song.spotify_track_link}</a><br>
     </p>
-    `).join('');
+`).join('');
 
     // Ensure the detected emotion stays above the song list
     recommendedSongsDiv.innerHTML = `
