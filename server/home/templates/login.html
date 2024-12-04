@@ -4,158 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for Icons -->
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body, html {
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-            background-color: #9A616D;
-        }
-
-        /* Container */
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        /* Card */
-        .card {
-            display: flex;
-            width: 900px;
-            height: 500px;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            background-color: white;
-        }
-
-        /* Left Image Section */
-        .card .img-container {
-            flex: 1;
-        }
-
-        .card .img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Right Form Section */
-        .card .form-container {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        /* Logo */
-        .form-container .logo {
-            font-size: 2em;
-            font-weight: bold;
-            color: #e74c3c;
-            margin-bottom: 10px;
-        }
-
-        /* Heading */
-        .form-container h5 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Error Message */
-        .form-container .error-message {
-            color: red;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        /* Form Group */
-        .form-container .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            outline: none;
-        }
-
-        /* Button */
-        .form-container .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-container .btn:hover {
-            background-color: #555;
-        }
-
-        /* Links */
-        .form-container a {
-            color: #393f81;
-            font-size: 0.9em;
-            text-decoration: none;
-        }
-
-        .form-container a:hover {
-            text-decoration: underline;
-        }
-
-        .form-container .forgot-password {
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* Footer Links */
-        .form-container .footer-links {
-            font-size: 0.9em;
-            color: #999;
-            margin-top: 30px;
-        }
-
-        .form-container .footer-links a {
-            color: #999;
-            text-decoration: none;
-        }
-    </style>
+    
+    <!-- Load static files -->
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/logi.css' %}">
+    <!-- Font Awesome for Icons -->
 </head>
-<body>
+
+    <body style="background-image: url('{% static 'css/images/logbg.jpg' %}'); background-size: cover; background-position: center; background-repeat: no-repeat; height: 100%; font-family: 'Roboto', sans-serif;">
+
 
     <div class="container">
         <div class="card">
             <!-- Left Image Section -->
             <div class="img-container">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="Login Image">
+                <img src="{% static 'css/images/login.jpg' %}" alt="Login Image">
             </div>
             
             <!-- Right Form Section -->
             <div class="form-container">
-                <div class="logo">
-                    <i class="fas fa-music"></i> ExpressBeats
-                </div>
-                <h5>Sign into your account</h5>
+                
+                <h2>Sign into your account</h2>
                 
                 <!-- Show error message if it exists -->
                 {% if error_message %}

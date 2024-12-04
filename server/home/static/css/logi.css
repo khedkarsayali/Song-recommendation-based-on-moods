@@ -1,0 +1,134 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    /* Use the static tag for the image path */
+    background-size: cover;  /* Ensures the image covers the entire page */
+    background-position: center;  /* Centers the background image */
+    background-repeat: no-repeat;  /* Ensures the image doesn't repeat */
+}
+
+/* Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Card */
+.card {
+    display: flex;
+    width: 100%;  /* Adjusted to fit full width */
+    height: 100%; /* Adjusted to fit full height */
+    max-width: 1200px;  /* Increased max-width */
+    max-height: 600px; /* Increased max-height */
+   
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    padding: 20px;  /* Increased padding inside the card */
+}
+
+/* Left Image Section */
+.card .img-container {
+    flex: 1;
+}
+
+.card .img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Right Form Section */
+.card .form-container {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Logo */
+
+/* Heading */
+.form-container h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #f11595;
+}
+
+/* Error Message */
+.form-container .error-message {
+    color: red;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Form Group */
+.form-container .form-group {
+    margin-bottom: 20px;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Button */
+.form-container .btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(255, 0, 128);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container .btn:hover {
+    background-color: #555;
+}
+
+/* Links */
+.form-container a {
+    color: #393f81;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
+
+.form-container .forgot-password {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Footer Links */
+.form-container .footer-links {
+    font-size: 0.9em;
+    color: #999;
+    margin-top: 30px;
+}
+
+.form-container .footer-links a {
+    color: #999;
+    text-decoration: none;
+}

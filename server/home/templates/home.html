@@ -8,24 +8,67 @@
     <title>ExpressBeats</title>
 </head>
 <body>
-    <div class="background">
-        <h1 class="title">Welcome to ExpressBeats</h1>
-        <div class="container">
-            <h2>Select User Type</h2>
-            <div class="user-types">
-                <!-- Admin User Type -->
-                <a href="{% url 'admin_login' %}" class="user-type"> <!-- Link to admin view -->
-                    <img src="{% static 'css/images/admin.png' %}" alt="Admin" class="user-image">
-                    <p>Admin</p>
-                </a>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <ul class="navbar-menu">
+                <li><a href="#about-section">About Us</a></li>
+                <li><a href="#footer">Contact Us</a></li>
+                <li><a href="#explore-section">Explore</a></li>
+                <li><a href="#suggestions-section">Suggestions</a></li>
+            </ul>
+        </div>
+    </nav>
 
-                <!-- Regular User Type -->
-                <a href="{% url 'login' %}" class="user-type">
-                    <img src="{% static 'css/images/user.png' %}" alt="User" class="user-image">
-                    <p>User</p>
+    <!-- Video Background -->
+    <div class="background">
+        <video autoplay muted loop id="background-video">
+            <source src="{% static 'css/images/video3.mp4' %}" type="video/mp4">
+        </video>
+        <div class="welcome-text">
+            <h1>Music that understands you</h1>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div id="about-section" class="container">
+        <h2>About Us</h2>
+        <p>At MoodyTunes, we believe music speaks where words fail. From mellow vibes to upbeat anthems, we curate sounds that match your every mood. Whether you're working, relaxing, or dancing, our playlist is your perfect soundtrack. Dive in and let your emotions flow with every beat!</p>
+    </div>
+
+    <!-- Explore Section -->
+    <div id="explore-section" class="container">
+        <h2>Explore More</h2>
+        <div class="outer-box">
+            <div class="user-types">
+                <a href="{% url 'admin_login' %}" class="user-card">
+                    <img src="{% static 'css/images/admin.avif' %}" alt="Admin" class="user-image">
+                    <p class="user-role">Admin</p>
+                </a>
+                <a href="{% url 'login' %}" class="user-card">
+                    <img src="{% static 'css/images/user.jpg' %}" alt="User" class="user-image">
+                    <p class="user-role">User</p>
                 </a>
             </div>
         </div>
     </div>
+
+    <!-- Suggestions Section -->
+    <div id="suggestions-section" class="container">
+        <h2>Suggestions</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="suggestion">Suggestion:</label>
+            <textarea id="suggestion" name="suggestion" rows="4" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="container">
+        <h2>Contact Us</h2>
+        <p>For inquiries, reach out to us at moodytunes@hotmail.com</p>
+    </footer>
 </body>
 </html>
